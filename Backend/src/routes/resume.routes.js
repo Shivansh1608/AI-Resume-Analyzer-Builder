@@ -33,6 +33,20 @@ resumeRouter.get("/:id", authMiddleware.authUser, resumeController.getResumeById
 resumeRouter.post("/enhance", authMiddleware.authUser, resumeController.enhanceResumeTextController);
 
 /**
+ * @route POST /api/resume/pdf
+ * @description Generate a resume PDF from current resume data without saving it first
+ * @access private
+ */
+resumeRouter.post("/pdf", authMiddleware.authUser, resumeController.generateResumePdfController);
+
+/**
+ * @route DELETE /api/resume/:id
+ * @description Delete a saved resume
+ * @access private
+ */
+resumeRouter.delete("/:id", authMiddleware.authUser, resumeController.deleteResumeController);
+
+/**
  * @route GET /api/resume/:id/pdf
  * @description Download resume as PDF using Puppeteer
  * @access private

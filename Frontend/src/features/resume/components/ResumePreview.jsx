@@ -8,12 +8,15 @@ const ResumePreview = ({ resumeData }) => {
         <div className="resume-preview-container">
             <div className="resume-preview-content">
                 <header className="resume-header">
-                    <h1>{personalInfo?.name || "Your Name"}</h1>
-                    <div className="contact-links">
-                        {personalInfo?.email && <span>{personalInfo.email}</span>}
-                        {personalInfo?.phone && <span>{personalInfo.phone}</span>}
-                        {personalInfo?.location && <span>{personalInfo.location}</span>}
+                    <div className="header-top">
+                        <h1>{personalInfo?.name || 'Your Name'}</h1>
+                        <div className="header-meta">
+                            {personalInfo?.email && <span>{personalInfo.email}</span>}
+                            {personalInfo?.phone && <span>{personalInfo.phone}</span>}
+                            {personalInfo?.location && <span>{personalInfo.location}</span>}
+                        </div>
                     </div>
+
                     {links && links.length > 0 && (
                         <div className="social-links">
                             {links.map((link, idx) => (
@@ -26,39 +29,26 @@ const ResumePreview = ({ resumeData }) => {
                 {summary && (
                     <section className="resume-section">
                         <h2>Professional Summary</h2>
-                        <p>{summary}</p>
+                        <div className="section-content">
+                            <p>{summary}</p>
+                        </div>
                     </section>
                 )}
 
                 {experience && experience.length > 0 && (
                     <section className="resume-section">
                         <h2>Experience</h2>
-                        <div className="experience-list">
+                        <div className="section-content">
                             {experience.map((exp, idx) => (
-                                <div key={idx} className="experience-item">
-                                    <div className="item-header">
-                                        <h3 className="role-title">{exp.role || "Role"}</h3>
-                                        <span className="dates">{exp.startDate} {exp.startDate && exp.endDate ? "-" : ""} {exp.endDate}</span>
+                                <div key={idx} className="section-item">
+                                    <div className="item-heading">
+                                        <div>
+                                            <h3>{exp.role || 'Role'}</h3>
+                                            <p className="item-subtitle">{exp.company || 'Company'}</p>
+                                        </div>
+                                        <span className="item-date">{exp.startDate || ''}{exp.startDate && exp.endDate ? ' – ' : ''}{exp.endDate || ''}</span>
                                     </div>
-                                    <h4 className="company-name">{exp.company || "Company"}</h4>
-                                    <p className="description">{exp.description}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                )}
-
-                {education && education.length > 0 && (
-                    <section className="resume-section">
-                        <h2>Education</h2>
-                        <div className="education-list">
-                            {education.map((edu, idx) => (
-                                <div key={idx} className="education-item">
-                                    <div className="item-header">
-                                        <h3 className="course-title">{edu.degree || "Degree"} {edu.field && `in ${edu.field}`}</h3>
-                                        <span className="dates">{edu.startDate} {edu.startDate && edu.endDate ? "-" : ""} {edu.endDate}</span>
-                                    </div>
-                                    <h4 className="institution-name">{edu.institution || "Institution"}</h4>
+                                    {exp.description && <p className="item-description">{exp.description}</p>}
                                 </div>
                             ))}
                         </div>
@@ -68,11 +58,30 @@ const ResumePreview = ({ resumeData }) => {
                 {projects && projects.length > 0 && (
                     <section className="resume-section">
                         <h2>Projects</h2>
-                        <div className="projects-list">
+                        <div className="section-content">
                             {projects.map((proj, idx) => (
-                                <div key={idx} className="project-item">
-                                    <h3 className="project-title">{proj.name || "Project Name"}</h3>
-                                    <p className="description">{proj.description}</p>
+                                <div key={idx} className="section-item">
+                                    <h3>{proj.name || 'Project Name'}</h3>
+                                    {proj.description && <p className="item-description">{proj.description}</p>}
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {education && education.length > 0 && (
+                    <section className="resume-section">
+                        <h2>Education</h2>
+                        <div className="section-content">
+                            {education.map((edu, idx) => (
+                                <div key={idx} className="section-item">
+                                    <div className="item-heading">
+                                        <div>
+                                            <h3>{edu.institution || 'Institution'}</h3>
+                                            <p className="item-subtitle">{edu.degree || 'Degree'}{edu.field ? ` in ${edu.field}` : ''}</p>
+                                        </div>
+                                        <span className="item-date">{edu.startDate || ''}{edu.startDate && edu.endDate ? ' – ' : ''}{edu.endDate || ''}</span>
+                                    </div>
                                 </div>
                             ))}
                         </div>

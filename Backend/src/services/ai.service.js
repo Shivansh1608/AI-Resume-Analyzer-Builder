@@ -13,12 +13,12 @@ const interviewReportSchema = z.object({
         question: z.string().describe("The technical question can be asked in the interview"),
         intention: z.string().describe("The intention of interviewer behind asking this question"),
         answer: z.string().describe("How to answer this question, what points to cover, what approach to take etc.")
-    })).describe("Technical questions that can be asked in the interview along with their intention and how to answer them"),
+    })).min(8).describe("Exactly 8 to 9 technical questions that can be asked in the interview along with their intention and how to answer them"),
     behavioralQuestions: z.array(z.object({
-        question: z.string().describe("The technical question can be asked in the interview"),
+        question: z.string().describe("The behavioral question can be asked in the interview"),
         intention: z.string().describe("The intention of interviewer behind asking this question"),
         answer: z.string().describe("How to answer this question, what points to cover, what approach to take etc.")
-    })).describe("Behavioral questions that can be asked in the interview along with their intention and how to answer them"),
+    })).min(8).describe("Exactly 8 to 9 behavioral questions that can be asked in the interview along with their intention and how to answer them"),
     skillGaps: z.array(z.object({
         skill: z.string().describe("The skill which the candidate is lacking"),
         severity: z.enum([ "low", "medium", "high" ]).describe("The severity of this skill gap, i.e. how important is this skill for the job and how much it can impact the candidate's chances")
@@ -35,47 +35,39 @@ const fallbackInterviewReport = ({ jobDescription, selfDescription, resume }) =>
     title: jobDescription.trim().slice(0, 120) || "Interview Report",
     matchScore: 70,
     technicalQuestions: [
-        {
-            question: "What relevant experience do you have for this role?",
-            intention: "Assess practical experience and fit for the technical requirements.",
-            answer: "Highlight your most relevant experience, key technologies used, and measurable outcomes."
-        },
-        {
-            question: "How would you approach solving a critical issue in the product?",
-            intention: "Evaluate problem solving and debugging process.",
-            answer: "Explain how you would investigate the issue, reproduce it, isolate the root cause, and verify a fix."
-        }
+        { question: "What relevant experience do you have for this role?", intention: "Assess practical experience and fit.", answer: "Highlight your most relevant experience, key technologies used, and measurable outcomes." },
+        { question: "Explain the difference between synchronous and asynchronous programming.", intention: "Test understanding of concurrency concepts.", answer: "Synchronous code runs sequentially; async allows non-blocking operations using callbacks, promises, or async/await." },
+        { question: "How would you design a scalable REST API?", intention: "Evaluate system design thinking.", answer: "Discuss statelessness, versioning, pagination, rate limiting, authentication, and horizontal scaling strategies." },
+        { question: "What is the difference between SQL and NoSQL databases?", intention: "Test database knowledge.", answer: "SQL uses structured schemas and ACID transactions; NoSQL offers flexibility, scalability, and multiple data models." },
+        { question: "How do you ensure code quality in your projects?", intention: "Assess engineering discipline.", answer: "Mention code reviews, unit/integration tests, linting, CI/CD pipelines, and thorough documentation." },
+        { question: "Explain the concept of caching and when you would use it.", intention: "Evaluate performance optimization knowledge.", answer: "Caching stores frequently accessed data to reduce latency. Use it for expensive DB queries, API responses, or computations." },
+        { question: "How do you handle errors and exceptions in production applications?", intention: "Check robustness and reliability awareness.", answer: "Discuss try/catch, error boundaries, centralized error logging, alerting, and graceful degradation strategies." },
+        { question: "Describe a challenging technical problem you solved recently.", intention: "Assess problem-solving and communication skills.", answer: "Use the STAR method — Situation, Task, Action, Result — with concrete technical details and learnings." }
     ],
     behavioralQuestions: [
-        {
-            question: "Tell me about a time you worked with a team to deliver a project.",
-            intention: "Evaluate collaboration and communication skills.",
-            answer: "Describe the project, your role, how you coordinated with the team, and the outcome."
-        }
+        { question: "Tell me about a time you worked with a team to deliver a project.", intention: "Evaluate collaboration and communication.", answer: "Describe the project, your role, how you coordinated, resolved conflicts, and the final outcome." },
+        { question: "Describe a situation where you missed a deadline. How did you handle it?", intention: "Assess accountability and time management.", answer: "Be honest, explain reasons, steps taken to communicate proactively, and what you learned to prevent recurrence." },
+        { question: "Tell me about a time you disagreed with a team member. How did you resolve it?", intention: "Evaluate conflict resolution skills.", answer: "Explain how you listened, presented your perspective respectfully, and reached a constructive compromise." },
+        { question: "How do you prioritize tasks when working on multiple projects simultaneously?", intention: "Assess organizational and time management skills.", answer: "Mention frameworks like Eisenhower Matrix, clear stakeholder communication, and daily planning habits." },
+        { question: "Describe a time you received critical feedback. How did you respond?", intention: "Evaluate self-awareness and growth mindset.", answer: "Show you listened without defensiveness, acknowledged the feedback, took specific action, and improved." },
+        { question: "Tell me about a time you went above and beyond for a project.", intention: "Assess initiative and work ethic.", answer: "Describe the extra effort, your motivation behind it, and the measurable positive impact it had." },
+        { question: "How do you keep yourself updated with the latest trends in your field?", intention: "Evaluate learning mindset and self-improvement.", answer: "Mention blogs, online courses, open source contributions, conferences, or communities you actively follow." },
+        { question: "Describe a time you had to learn something new quickly under pressure.", intention: "Assess adaptability and learning agility.", answer: "Explain the situation, your strategy for rapid learning (resources, mentors, docs), and how you applied it successfully." }
     ],
     skillGaps: [
-        {
-            skill: "Domain-specific knowledge",
-            severity: "medium"
-        }
+        { skill: "Domain-specific technical knowledge", severity: "medium" },
+        { skill: "System design at scale", severity: "high" },
+        { skill: "Testing and QA practices", severity: "medium" },
+        { skill: "Cloud services (AWS / GCP / Azure)", severity: "low" }
     ],
     preparationPlan: [
-        {
-            day: 1,
-            focus: "Review the job requirements and core skills.",
-            tasks: [
-                "Map your experience to the job description.",
-                "List key technical and behavioral stories to share."
-            ]
-        },
-        {
-            day: 2,
-            focus: "Practice technical problem solving.",
-            tasks: [
-                "Solve 3-5 coding problems related to the role.",
-                "Review common data structures and algorithms." 
-            ]
-        }
+        { day: 1, focus: "Analyze the job description and map your skills.", tasks: ["Read the JD carefully and highlight key requirements.", "List matching and missing skills.", "Update your resume to align with the role."] },
+        { day: 2, focus: "Core data structures and algorithms.", tasks: ["Revise arrays, linked lists, trees, and graphs.", "Solve 5 coding problems on LeetCode.", "Review time and space complexity analysis."] },
+        { day: 3, focus: "System design fundamentals.", tasks: ["Study scalability, load balancing, and caching patterns.", "Practice designing a URL shortener or chat system.", "Watch a system design breakdown video."] },
+        { day: 4, focus: "Role-specific technologies and frameworks.", tasks: ["Deep dive into frameworks or tools listed in the JD.", "Build a small demo project using them.", "Read official documentation and best practices."] },
+        { day: 5, focus: "Behavioral interview preparation.", tasks: ["Prepare STAR stories for 8 common behavioral questions.", "Practice answering out loud or with a friend.", "Focus on conflict, leadership, failure, and growth stories."] },
+        { day: 6, focus: "Mock interviews and feedback.", tasks: ["Do a full mock technical interview (timed).", "Record yourself answering behavioral questions.", "Review answers, identify gaps, and refine."] },
+        { day: 7, focus: "Final review and mindset preparation.", tasks: ["Review your notes and key concepts once more.", "Research the company's culture, products, and recent news.", "Prepare 3-5 insightful questions to ask the interviewer."] }
     ]
 })
 
@@ -84,15 +76,24 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
         return fallbackInterviewReport({ resume, selfDescription, jobDescription })
     }
 
-    const prompt = `Generate an interview report for a candidate with the following details:
-                        Resume: ${resume}
-                        Self Description: ${selfDescription}
-                        Job Description: ${jobDescription}
+    const prompt = `You are a senior technical interviewer. Generate a comprehensive interview report for a candidate applying for the following role.
+
+Resume: ${resume}
+Self Description: ${selfDescription}
+Job Description: ${jobDescription}
+
+IMPORTANT REQUIREMENTS:
+- Generate EXACTLY 8 to 9 technical questions covering core concepts, problem solving, system design, and role-specific skills.
+- Generate EXACTLY 8 to 9 behavioral questions covering teamwork, conflict resolution, leadership, time management, and situational judgment.
+- Each question must have a clear intention and a detailed model answer.
+- Skill gaps should list at least 4-6 skills the candidate is missing for this role.
+- Preparation plan should cover at least 7 days.
+- Match score should accurately reflect the candidate's fit for the role.
 `
 
     try {
         const response = await ai.models.generateContent({
-            model: "gemini-3-flash-preview",
+            model: "gemini-2.0-flash",
             contents: prompt,
             config: {
                 responseMimeType: "application/json",
@@ -151,7 +152,7 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
 
     try {
         const response = await ai.models.generateContent({
-            model: "gemini-3-flash-preview",
+            model: "gemini-2.0-flash",
             contents: prompt,
             config: {
                 responseMimeType: "application/json",

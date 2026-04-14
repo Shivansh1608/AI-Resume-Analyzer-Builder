@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../style/resumeBuilder.scss';
-import { saveResume, enhanceContent, downloadResumePdf } from '../services/resume.api';
+import { saveResume, enhanceContent, downloadResumePdf, getResumes, getResumeById, deleteResume } from '../services/resume.api';
 import { useNavigate } from 'react-router';
 import ResumePreview from '../components/ResumePreview';
 
 const ResumeBuilder = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
+    const [savedLoading, setSavedLoading] = useState(false);
     const [error, setError] = useState("");
     const [enhancing, setEnhancing] = useState({});
+    const [savedResumes, setSavedResumes] = useState([]);
 
     const [resumeData, setResumeData] = useState({
         title: 'Untitled Resume',
@@ -88,10 +90,22 @@ const ResumeBuilder = () => {
     const handleSave = async () => {
         setLoading(true);
         setError("");
+
+        if (!resumeData.personalInfo.name.trim() || !resumeData.personalInfo.email.trim()) {
+            setError("Name and email are required before saving the resume.");
+            setLoading(false);
+            return;
+        }
+
         try {
             const data = await saveResume(resumeData);
-            if (data?.resume?._id && !resumeData._id) {
+            if (data?.resume?._id) {
                 setResumeData(prev => ({ ...prev, _id: data.resume._id }));
+                setSavedResumes(prev => {
+                    const existing = prev.find(item => item._id === data.resume._id);
+                    if (existing) return prev;
+                    return [data.resume, ...prev];
+                });
             }
             alert("Resume Saved Successfully!");
         } catch (err) {
@@ -101,14 +115,107 @@ const ResumeBuilder = () => {
         }
     };
 
-    const handleDownload = async () => {
-        if (!resumeData._id) {
-            alert("Please save the resume first before downloading.", "error");
+    useEffect(() => {
+        const fetchSaved = async () => {
+            setSavedLoading(true);
+            try {
+                const data = await getResumes();
+                setSavedResumes(data.resumes || []);
+            } catch (err) {
+                console.error("Unable to load saved resumes", err);
+            } finally {
+                setSavedLoading(false);
+            }
+        };
+
+        fetchSaved();
+    }, []);
+
+    const handleSaveAndDownload = async () => {
+        setLoading(true);
+        setError("");
+
+        if (!resumeData.personalInfo.name.trim() || !resumeData.personalInfo.email.trim()) {
+            setError("Name and email are required before downloading the resume.");
+            setLoading(false);
             return;
         }
-        setLoading(true);
+
         try {
-            await downloadResumePdf(resumeData._id);
+            const data = await saveResume(resumeData);
+            if (data?.resume?._id) {
+                setResumeData(prev => ({ ...prev, _id: data.resume._id }));
+                await downloadResumePdf(data.resume._id);
+                setSavedResumes(prev => {
+                    const existing = prev.find(item => item._id === data.resume._id);
+                    if (existing) return prev;
+                    return [data.resume, ...prev];
+                });
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || "Unable to save and download PDF. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleLoadDraft = async (id) => {
+        setLoading(true);
+        setError("");
+        try {
+            const data = await getResumeById(id);
+            if (data?.resume) {
+                setResumeData(data.resume);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || "Unable to load saved resume.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDeleteResume = async (id) => {
+        if (!window.confirm("Delete this saved resume?")) return;
+        setLoading(true);
+        setError("");
+        try {
+            await deleteResume(id);
+            setSavedResumes(prev => prev.filter(resume => resume._id !== id));
+            if (resumeData._id === id) {
+                setResumeData({
+                    title: 'Untitled Resume',
+                    template: 'modern',
+                    personalInfo: { name: '', email: '', phone: '', location: '' },
+                    summary: '',
+                    experience: [],
+                    education: [],
+                    projects: [],
+                    skills: [],
+                    links: []
+                });
+            }
+        } catch (err) {
+            setError(err.response?.data?.message || "Unable to delete saved resume.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDownload = async () => {
+        if (!resumeData.personalInfo.name.trim() || !resumeData.personalInfo.email.trim()) {
+            setError("Please add your name and email before generating the PDF.");
+            return;
+        }
+
+        setLoading(true);
+        setError("");
+        try {
+            if (resumeData._id) {
+                await downloadResumePdf(resumeData._id);
+            } else {
+                await downloadResumePdf(null, resumeData);
+            }
         } catch (err) {
              setError(err.response?.data?.message || "Unable to download PDF. Please try again.");
         } finally {
@@ -121,6 +228,9 @@ const ResumeBuilder = () => {
             <header>
                 <h1>Resume Builder</h1>
                 <div className="header-actions">
+                    <button className="button tertiary-button" disabled={loading} onClick={handleSaveAndDownload}>
+                        {loading ? "Processing..." : "Save & Download"}
+                    </button>
                     <button className="button secondary-button" disabled={loading} onClick={handleDownload}>
                          Download PDF
                     </button>
@@ -134,6 +244,31 @@ const ResumeBuilder = () => {
 
             <div className="builder-container">
                 <div className="builder-sidebar">
+                    <div className="card saved-resumes-card">
+                        <h2>Saved Resumes</h2>
+                        {savedLoading ? (
+                            <p>Loading saved resumes...</p>
+                        ) : savedResumes.length === 0 ? (
+                            <p>No saved resumes yet.</p>
+                        ) : (
+                            <div className="saved-resume-list">
+                                {savedResumes.map((resume) => (
+                                    <div key={resume._id} className="saved-resume-item">
+                                        <div>
+                                            <strong>{resume.personalInfo?.name || resume.title}</strong>
+                                            <p>{new Date(resume.updatedAt || resume.createdAt).toLocaleDateString()}</p>
+                                        </div>
+                                        <div className="saved-resume-actions">
+                                            <button className="button tertiary-button" type="button" onClick={() => handleLoadDraft(resume._id)}>Load</button>
+                                            <button className="button secondary-button" type="button" onClick={() => downloadResumePdf(resume._id)}>Download</button>
+                                            <button className="button danger-button" type="button" onClick={() => handleDeleteResume(resume._id)}>Delete</button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
                     {/* Personal Info */}
                 <div className="card">
                     <h2>Personal Information</h2>

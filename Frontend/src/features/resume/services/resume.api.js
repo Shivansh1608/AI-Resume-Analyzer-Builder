@@ -77,18 +77,29 @@ export const enhanceContent = async ({ field, content, context }) => {
     }
 }
 
-export const downloadResumePdf = async (id) => {
+export const downloadResumePdf = async (id, resumeData = null) => {
     try {
-        const response = await api.get(`/api/resume/${id}/pdf`, {
-            responseType: "blob"
-        });
+        const response = id
+            ? await api.get(`/api/resume/${id}/pdf`, { responseType: "blob" })
+            : await api.post("/api/resume/pdf", resumeData, { responseType: "blob" });
+
         const url = window.URL.createObjectURL(new Blob([response.data], { type: "application/pdf" }));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", `resume_${id}.pdf`);
+        link.setAttribute("download", `resume_${id || 'draft'}.pdf`);
         document.body.appendChild(link);
         link.click();
         link.remove();
+    } catch (err) {
+        console.error(err)
+        throw err
+    }
+};
+
+export const deleteResume = async (id) => {
+    try {
+        const response = await api.delete(`/api/resume/${id}`);
+        return response.data;
     } catch (err) {
         console.error(err)
         throw err

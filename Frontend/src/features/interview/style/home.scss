@@ -1,373 +1,896 @@
 // ── Variables ────────────────────────────────────────────────────────────────
-$bg-page:        #0d1117;
-$bg-card:        #161b22;
-$bg-panel:       #1c2230;
-$bg-input:       #1e2535;
-$border-color:   #2a3348;
-$text-primary:   #e6edf3;
-$text-muted:     #7d8590;
-$accent:         #ff2d78;
-$accent-alt:     #ff6b9d;
-$badge-required: #ff2d78;
-$badge-best:     #ff2d78;
-$info-bg:        #1b2a4a;
-$info-border:    #2d4a7a;
-$font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$bg-page:      #0a0d16;
+$bg-nav:       #0e1220;
+$bg-card:      #111827;
+$bg-card-alt:  #131c2e;
+$bg-input:     rgba(15, 22, 40, 0.95);
+$border:       rgba(255, 255, 255, 0.07);
+$border-hover: rgba(255, 255, 255, 0.13);
+$text-primary: #e9eef7;
+$text-muted:   #6b7694;
+$text-sub:     #8a96ac;
+$accent:       #ff2d78;
+$teal:         #00d4a1;
+$purple:       #7c6cfc;
+$font:         system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+// ── Reset ────────────────────────────────────────────────────────────────────
+* { box-sizing: border-box; }
+ul { list-style: none; margin: 0; padding: 0; }
 
 // ── Page Shell ───────────────────────────────────────────────────────────────
-.home-page {
-    width: 100%;
+.dash-page {
     min-height: 100vh;
     background-color: $bg-page;
     color: $text-primary;
-    font-family: $font-stack;
-
+    font-family: $font;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 3rem 1.5rem;
-    gap: 2rem;
 }
 
-// ── Page Header ──────────────────────────────────────────────────────────────
-.page-header {
-    text-align: center;
+// ── Navbar ───────────────────────────────────────────────────────────────────
+.dash-nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 0 2rem;
+    height: 56px;
+    background-color: $bg-nav;
+    border-bottom: 1px solid $border;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 
-    h1 {
-        font-size: 2.25rem;
+    &__brand {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        margin-right: 0.5rem;
+    }
+
+    &__logo-icon {
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(135deg, $teal, #0affcd);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 0.85rem;
+        color: $bg-page;
+    }
+
+    &__logo-text {
+        font-size: 0.95rem;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        color: $text-primary;
+
+        span { color: $teal; }
+    }
+
+    &__links {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        flex: 1;
+    }
+
+    &__link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.45rem 1rem;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        font-family: $font;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $text-sub;
+        background: transparent;
+        cursor: pointer;
+        transition: color 0.18s, background 0.18s, border-color 0.18s;
+
+        &:hover {
+            color: $text-primary;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        &--active {
+            background: rgba($teal, 0.12);
+            color: $teal;
+            border-color: rgba($teal, 0.2);
+        }
+    }
+
+    &__user {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        margin-left: auto;
+        position: relative;
+    }
+
+    &__avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, $teal, $purple);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-weight: 700;
-        margin-bottom: 0.5rem;
+        font-size: 0.78rem;
+        color: #fff;
+        flex-shrink: 0;
+    }
+
+    &__username {
+        font-size: 0.875rem;
+        font-weight: 500;
         color: $text-primary;
     }
 
-    p {
-        color: $text-muted;
-        font-size: 0.95rem;
-        max-width: 480px;
-        margin: 0 auto;
-        line-height: 1.6;
+    &__user-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.25rem 0.5rem;
+        border-radius: 8px;
+        font-family: $font;
+        transition: background 0.18s;
+
+        &:hover { background: rgba(255, 255, 255, 0.06); }
     }
 
-    .highlight {
-        color: $accent;
+    &__chevron {
+        color: $text-muted;
+        transition: transform 0.2s ease;
+        flex-shrink: 0;
+
+        &--open { transform: rotate(180deg); }
+    }
+
+    &__avatar--lg {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    &__dropdown {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        min-width: 220px;
+        background: #161d2e;
+        border: 1px solid $border;
+        border-radius: 12px;
+        box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+        z-index: 200;
+        overflow: hidden;
+        animation: fadeDown 0.18s ease;
+    }
+
+    &__dropdown-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem 1.1rem;
+    }
+
+    &__dropdown-name {
+        margin: 0;
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: $text-primary;
+    }
+
+    &__dropdown-email {
+        margin: 0;
+        font-size: 0.75rem;
+        color: $text-muted;
+        margin-top: 0.1rem;
+    }
+
+    &__dropdown-divider {
+        height: 1px;
+        background: $border;
+        margin: 0;
+    }
+
+    &__dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        width: 100%;
+        padding: 0.8rem 1.1rem;
+        background: none;
+        border: none;
+        font-family: $font;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: $text-sub;
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s;
+
+        &:hover { background: rgba(255, 255, 255, 0.05); color: $text-primary; }
+
+        &--signout {
+            color: $accent;
+
+            &:hover { background: rgba($accent, 0.08); color: $accent; }
+        }
     }
 }
 
-// ── Main Card ─────────────────────────────────────────────────────────────────
-.interview-card {
+// ── Main Content ─────────────────────────────────────────────────────────────
+.dash-main {
+    flex: 1;
+    max-width: 1100px;
     width: 100%;
-    max-width: 900px;
-    background-color: $bg-card;
-    border: 1px solid $border-color;
-    border-radius: 1rem;
-    overflow: hidden;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.25rem;
+}
+
+// ── Welcome ───────────────────────────────────────────────────────────────────
+.dash-welcome {
+    h1 {
+        font-size: clamp(1.6rem, 3vw, 2.1rem);
+        font-weight: 800;
+        margin: 0 0 0.35rem;
+        letter-spacing: -0.03em;
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.95rem;
+        color: $text-sub;
+    }
+
+    &__name { color: $teal; }
+}
+
+// ── Action Cards ─────────────────────────────────────────────────────────────
+.dash-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+
+    @media (max-width: 640px) { grid-template-columns: 1fr; }
+}
+
+.action-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.1rem;
+    padding: 1.5rem 1.75rem;
+    border-radius: 14px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s;
+
+    &:hover { transform: translateY(-2px); }
+
+    &--teal {
+        background: linear-gradient(135deg, rgba($teal, 0.08) 0%, rgba($teal, 0.03) 100%);
+        border-color: rgba($teal, 0.18);
+
+        &:hover {
+            border-color: rgba($teal, 0.35);
+            box-shadow: 0 12px 40px rgba($teal, 0.1);
+        }
+    }
+
+    &--purple {
+        background: linear-gradient(135deg, rgba($purple, 0.1) 0%, rgba($purple, 0.04) 100%);
+        border-color: rgba($purple, 0.2);
+
+        &:hover {
+            border-color: rgba($purple, 0.38);
+            box-shadow: 0 12px 40px rgba($purple, 0.1);
+        }
+    }
+
+    &__icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        &--teal {
+            background: rgba($teal, 0.15);
+            color: $teal;
+        }
+
+        &--purple {
+            background: rgba($purple, 0.15);
+            color: $purple;
+        }
+    }
 
     &__body {
         display: flex;
-        min-height: 520px;
+        flex-direction: column;
+        gap: 0.4rem;
+
+        h3 {
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: $text-primary;
+        }
+
+        p {
+            margin: 0;
+            font-size: 0.84rem;
+            color: $text-sub;
+            line-height: 1.55;
+        }
+    }
+
+    &__cta {
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-top: 0.4rem;
+
+        &--teal { color: $teal; }
+        &--purple { color: $purple; }
+    }
+}
+
+// ── Generate Form ─────────────────────────────────────────────────────────────
+.gen-form {
+    background: $bg-card;
+    border: 1px solid $border;
+    border-radius: 14px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    animation: fadeDown 0.25s ease;
+
+    &__panels {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+
+        @media (max-width: 640px) { grid-template-columns: 1fr; }
+    }
+
+    &__panel {
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+        position: relative;
+    }
+
+    &__label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: $text-primary;
+    }
+
+    &__req {
+        font-size: 0.68rem;
+        font-weight: 700;
+        background: rgba($accent, 0.12);
+        color: $accent;
+        border: 1px solid rgba($accent, 0.2);
+        padding: 0.1rem 0.45rem;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    &__textarea {
+        width: 100%;
+        min-height: 150px;
+        background: $bg-input;
+        border: 1px solid $border;
+        border-radius: 10px;
+        padding: 0.9rem 1rem;
+        color: $text-primary;
+        font-family: $font;
+        font-size: 0.9rem;
+        resize: vertical;
+        outline: none;
+        line-height: 1.7;
+        transition: border-color 0.2s;
+
+        &::placeholder { color: $text-muted; }
+        &:focus { border-color: rgba($teal, 0.4); }
+
+        &--short { min-height: 90px; }
+    }
+
+    &__counter {
+        position: absolute;
+        bottom: 0.6rem;
+        right: 0.85rem;
+        font-size: 0.75rem;
+        color: $text-muted;
+    }
+
+    &__dropzone {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        padding: 1.25rem;
+        background: $bg-input;
+        border: 1px dashed rgba($teal, 0.22);
+        border-radius: 10px;
+        cursor: pointer;
+        color: $text-sub;
+        transition: border-color 0.2s, background 0.2s;
+
+        svg { color: $teal; margin-bottom: 0.2rem; }
+        span { font-size: 0.875rem; font-weight: 600; color: $text-primary; }
+        small { font-size: 0.78rem; color: $text-muted; }
+
+        &:hover {
+            border-color: rgba($teal, 0.45);
+            background: rgba($teal, 0.05);
+        }
+    }
+
+    &__or {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        color: $text-muted;
+        font-size: 0.78rem;
+
+        &::before, &::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: $border;
+        }
     }
 
     &__footer {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 1rem 1.5rem;
-        border-top: 1px solid $border-color;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid $border;
+    }
 
-        .footer-info {
-            font-size: 0.8rem;
-            color: $text-muted;
-        }
+    &__hint {
+        font-size: 0.82rem;
+        color: $text-muted;
+    }
+
+    &__btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, $accent 0%, #cc1f5e 100%);
+        color: #fff;
+        font-family: $font;
+        font-size: 0.9rem;
+        font-weight: 700;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: opacity 0.2s, transform 0.15s;
+
+        &:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+        &:disabled { opacity: 0.5; cursor: not-allowed; }
+    }
+
+    &__error {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #ffb3c6;
+        background: rgba($accent, 0.08);
+        border: 1px solid rgba($accent, 0.18);
+        padding: 0.65rem 0.9rem;
+        border-radius: 8px;
     }
 }
 
-// ── Panels ────────────────────────────────────────────────────────────────────
-.panel-divider {
-    width: 1px;
-    background-color: $border-color;
-    flex-shrink: 0;
+@keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-.panel {
-    flex: 1;
+// ── Sections ──────────────────────────────────────────────────────────────────
+.dash-section {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    padding: 1.5rem;
 
     &__header {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.25rem;
+        justify-content: space-between;
 
         h2 {
-            font-size: 1rem;
-            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin: 0;
+            font-size: 1.05rem;
+            font-weight: 700;
             color: $text-primary;
-            flex: 1;
+
+            svg { color: $accent; }
         }
     }
 
-    &__icon {
-        display: flex;
-        align-items: center;
-        color: $accent;
-    }
+    &__viewall {
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: $text-muted;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: $font;
+        transition: color 0.2s;
 
-    &__textarea {
-        flex: 1;
-        width: 100%;
-        background-color: $bg-input;
-        border: 1px solid $border-color;
-        border-radius: 0.5rem;
-        padding: 0.75rem 1rem;
-        color: $text-primary;
-        font-family: $font-stack;
-        font-size: 0.875rem;
-        resize: none;
-        outline: none;
-        transition: border-color 0.2s;
-        line-height: 1.5;
-
-        &::placeholder {
-            color: $text-muted;
-        }
-
-        &:focus {
-            border-color: $accent;
-        }
-
-        &--short {
-            flex: unset;
-            height: 96px;
-        }
-    }
-
-    &--left {
-        position: relative;
-
-        .char-counter {
-            position: absolute;
-            bottom: 2.25rem;
-            right: 2rem;
-            font-size: 0.75rem;
-            color: $text-muted;
-        }
-    }
-
-    &--right {
-        gap: 0.75rem;
+        &:hover { color: $text-primary; }
     }
 }
 
-// ── Badges ────────────────────────────────────────────────────────────────────
-.badge {
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 0.15rem 0.5rem;
-    border-radius: 0.3rem;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
+// ── Report Cards ──────────────────────────────────────────────────────────────
+.report-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
 
-    &--required {
-        background-color: rgba($badge-required, 0.15);
-        color: $badge-required;
-        border: 1px solid rgba($badge-required, 0.3);
-    }
-
-    &--best {
-        background-color: rgba($badge-best, 0.15);
-        color: $badge-best;
-        border: 1px solid rgba($badge-best, 0.3);
-    }
+    @media (max-width: 640px) { grid-template-columns: 1fr; }
 }
 
-// ── Section Label ─────────────────────────────────────────────────────────────
-.section-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: $text-primary;
-    margin-bottom: 0.25rem;
-}
-
-// ── Dropzone ──────────────────────────────────────────────────────────────────
-.upload-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.dropzone {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
-    padding: 1.5rem 1rem;
-    background-color: $bg-input;
-    border: 2px dashed $border-color;
-    border-radius: 0.6rem;
+.report-card {
+    background: $bg-card;
+    border: 1px solid $border;
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
     cursor: pointer;
-    transition: border-color 0.2s, background-color 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
 
     &:hover {
-        border-color: $accent;
-        background-color: rgba($accent, 0.05);
+        border-color: $border-hover;
+        background: $bg-card-alt;
+        transform: translateY(-2px);
+    }
+
+    &__meta {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.75rem;
+        color: $text-muted;
+        font-weight: 500;
+
+        svg { flex-shrink: 0; }
+    }
+
+    &__row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    &__info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        flex: 1;
+        min-width: 0;
+
+        h3 {
+            margin: 0;
+            font-size: 0.97rem;
+            font-weight: 700;
+            color: $text-primary;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
+
+    &__date {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.78rem;
+        color: $text-muted;
+        margin: 0;
+
+        svg { flex-shrink: 0; }
+    }
+
+    &__delete {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        background: none;
+        border: 1px solid transparent;
+        color: $text-muted;
+        cursor: pointer;
+        transition: color 0.18s, background 0.18s, border-color 0.18s;
+        flex-shrink: 0;
+
+        &:hover {
+            color: $accent;
+            background: rgba($accent, 0.1);
+            border-color: rgba($accent, 0.2);
+        }
+    }
+}
+
+// ── Circular Score Ring ───────────────────────────────────────────────────────
+.score-ring {
+    position: relative;
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+
+    svg {
+        transform: rotate(-90deg);
+        display: block;
+    }
+
+    &__track {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.06);
+    }
+
+    &__fill {
+        fill: none;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 0.6s ease;
+    }
+
+    &__label {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+}
+
+// ── Resume Cards ──────────────────────────────────────────────────────────────
+.resume-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+
+    @media (max-width: 640px) { grid-template-columns: 1fr; }
+}
+
+.resume-card {
+    background: $bg-card;
+    border: 1px solid $border;
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+
+    &:hover {
+        border-color: $border-hover;
+        background: $bg-card-alt;
+        transform: translateY(-2px);
     }
 
     &__icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: rgba($purple, 0.14);
+        color: $purple;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        min-width: 0;
+
+        h3 {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: $text-primary;
+        }
+
+        p {
+            margin: 0;
+            font-size: 0.82rem;
+            color: $text-sub;
+        }
+    }
+
+    &__date {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.75rem;
+        color: $text-muted;
+        margin-top: 0.3rem;
+
+        svg { flex-shrink: 0; }
+    }
+}
+
+// ── Stats Row ─────────────────────────────────────────────────────────────────
+.dash-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.85rem;
+
+    @media (max-width: 900px) { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 480px) { grid-template-columns: 1fr 1fr; }
+}
+
+.stat-card {
+    background: $bg-card;
+    border: 1px solid $border;
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    &__icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &--teal   { background: rgba($teal, 0.12);    color: $teal;   }
+        &--purple { background: rgba($purple, 0.14);  color: $purple; }
+        &--green  { background: rgba(#22c55e, 0.12);  color: #22c55e; }
+        &--pink   { background: rgba($accent, 0.12);  color: $accent; }
+    }
+
+    &__value {
+        font-size: 1.65rem;
+        font-weight: 800;
+        color: $text-primary;
+        letter-spacing: -0.03em;
+        line-height: 1;
+    }
+
+    &__label {
+        font-size: 0.8rem;
+        color: $text-muted;
+        font-weight: 500;
+    }
+}
+
+// ── Confirm Delete Modal ──────────────────────────────────────────────────────
+.confirm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(4px);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.15s ease;
+}
+
+.confirm-modal {
+    background: #161d2e;
+    border: 1px solid $border;
+    border-radius: 16px;
+    padding: 2rem;
+    max-width: 380px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+    text-align: center;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    animation: fadeDown 0.2s ease;
+
+    &__icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: rgba($accent, 0.12);
+        border: 1px solid rgba($accent, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         color: $accent;
         margin-bottom: 0.25rem;
     }
 
-    &__title {
-        font-size: 0.875rem;
-        font-weight: 500;
+    h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 800;
         color: $text-primary;
-        margin: 0;
-    }
-
-    &__subtitle {
-        font-size: 0.75rem;
-        color: $text-muted;
-        margin: 0;
-    }
-}
-
-// ── OR Divider ────────────────────────────────────────────────────────────────
-.or-divider {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: $text-muted;
-    font-size: 0.75rem;
-
-    &::before,
-    &::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background-color: $border-color;
-    }
-
-    span {
-        white-space: nowrap;
-    }
-}
-
-// ── Self Description ──────────────────────────────────────────────────────────
-.self-description {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-// ── Info Box ──────────────────────────────────────────────────────────────────
-.info-box {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
-    padding: 0.75rem 1rem;
-    background-color: $info-bg;
-    border: 1px solid $info-border;
-    border-radius: 0.5rem;
-
-    &__icon {
-        flex-shrink: 0;
-        color: #4a90e2;
-        margin-top: 1px;
     }
 
     p {
         margin: 0;
-        font-size: 0.8rem;
-        color: #8ab4f8;
-        line-height: 1.5;
-
-        strong {
-            color: $text-primary;
-        }
-    }
-}
-
-// ── Generate Button ───────────────────────────────────────────────────────────
-.generate-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, $accent 0%, darken($accent, 10%) 100%);
-    color: #fff;
-    font-size: 0.9rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.1s;
-    font-family: $font-stack;
-
-    &:hover {
-        opacity: 0.9;
+        font-size: 0.875rem;
+        color: $text-sub;
+        line-height: 1.6;
     }
 
-    &:active {
-        transform: scale(0.98);
-    }
-}
-
-.recent-reports{
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    width: 100%;
-    max-width: 900px;
-
-    .reports-list{
+    &__actions {
         display: flex;
         gap: 0.75rem;
-        flex-wrap: wrap;
+        width: 100%;
+        margin-top: 0.5rem;
+    }
 
-        .report-item{
-            background-color: $bg-card;
-            border: 1px solid $border-color;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            cursor: pointer;
-            flex-shrink: 0;
+    &__btn {
+        flex: 1;
+        padding: 0.7rem 1rem;
+        border-radius: 10px;
+        font-family: $font;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: opacity 0.18s, transform 0.15s;
 
-            .match-score {
-                font-size: 0.8rem;
-                font-weight: 600;
-                color: $accent;
-                align-items: flex-start;
-            }
+        &:hover { opacity: 0.88; transform: translateY(-1px); }
+
+        &--cancel {
+            background: rgba(255, 255, 255, 0.07);
+            color: $text-primary;
+            border: 1px solid $border;
+        }
+
+        &--delete {
+            background: linear-gradient(135deg, $accent, #cc1f5e);
+            color: #fff;
         }
     }
 }
 
-
-// ── Page Footer ───────────────────────────────────────────────────────────────
-.page-footer {
-    display: flex;
-    gap: 1.5rem;
-
-    a {
-        font-size: 0.8rem;
-        color: $text-muted;
-        text-decoration: none;
-        transition: color 0.2s;
-
-        &:hover {
-            color: $text-primary;
-        }
-    }
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
