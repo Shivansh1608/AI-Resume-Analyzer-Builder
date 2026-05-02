@@ -118,7 +118,7 @@ function getTemplateHtml(resume) {
                 body { margin: 0; padding: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif; color: #222; background: #f7f7f7; }
                 .page { width: 210mm; min-height: 297mm; margin: 0 auto; padding: 24mm 20mm; background: #fff; box-sizing: border-box; }
                 .header { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 24px; }
-                .header h1 { font-size: 34px; letter-spacing: -0.5px; margin: 0; color: #111; }
+                .header h1 { font-size: 34px; letter-spacing: -0.5px; margin: 0; color: #000000; font-weight: 700; }
                 .header-line { width: 80px; height: 4px; background: #111; margin: 12px 0; }
                 .contact { font-size: 12px; color: #555; display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
                 .section { margin-bottom: 20px; }

@@ -450,6 +450,67 @@ ul { list-style: none; margin: 0; padding: 0; }
         }
     }
 
+    &__file-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.7rem 1rem;
+        background: rgba($teal, 0.08);
+        border: 1px solid rgba($teal, 0.22);
+        border-radius: 8px;
+        animation: fadeDown 0.2s ease;
+    }
+
+    &__file-details {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-width: 0;
+
+        svg {
+            color: $teal;
+            flex-shrink: 0;
+        }
+    }
+
+    &__file-name {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: $text-primary;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &__file-size {
+        font-size: 0.75rem;
+        color: $text-muted;
+        flex-shrink: 0;
+    }
+
+    &__file-remove {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        color: $text-muted;
+        font-size: 0.8rem;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: color 0.18s, background 0.18s, border-color 0.18s;
+
+        &:hover {
+            color: $accent;
+            background: rgba($accent, 0.1);
+            border-color: rgba($accent, 0.2);
+        }
+    }
+
     &__or {
         display: flex;
         align-items: center;

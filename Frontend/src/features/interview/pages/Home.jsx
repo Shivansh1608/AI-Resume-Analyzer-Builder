@@ -133,7 +133,22 @@ const Home = () => {
     const [selfDescription, setSelfDescription] = useState('')
     const [formError, setFormError] = useState('')
     const [confirmDelete, setConfirmDelete] = useState(null) // holds report id to delete
+    const [selectedFile, setSelectedFile] = useState(null)
     const resumeInputRef = useRef()
+
+    const handleFileChange = (e) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            setSelectedFile(file)
+        }
+    }
+
+    const handleRemoveFile = () => {
+        setSelectedFile(null)
+        if (resumeInputRef.current) {
+            resumeInputRef.current.value = ''
+        }
+    }
 
     useEffect(() => {
         getReports()
@@ -228,10 +243,22 @@ const Home = () => {
                                 </label>
                                 <label className='gen-form__dropzone' htmlFor='resume-upload'>
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/></svg>
-                                    <span>Click to upload resume</span>
+                                    <span>{selectedFile ? 'Change file' : 'Click to upload resume'}</span>
                                     <small>PDF or DOCX · Max 5MB</small>
-                                    <input ref={resumeInputRef} hidden type='file' id='resume-upload' accept='.pdf,.docx' />
+                                    <input ref={resumeInputRef} hidden type='file' id='resume-upload' accept='.pdf,.docx' onChange={handleFileChange} />
                                 </label>
+                                {selectedFile && (
+                                    <div className='gen-form__file-info'>
+                                        <div className='gen-form__file-details'>
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                            <span className='gen-form__file-name'>{selectedFile.name}</span>
+                                            <span className='gen-form__file-size'>({(selectedFile.size / 1024).toFixed(1)} KB)</span>
+                                        </div>
+                                        <button type='button' className='gen-form__file-remove' onClick={handleRemoveFile} title='Remove file'>
+                                            ✕
+                                        </button>
+                                    </div>
+                                )}
                                 <div className='gen-form__or'><span>OR</span></div>
                                 <textarea
                                     className='gen-form__textarea gen-form__textarea--short'
