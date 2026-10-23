@@ -9,16 +9,22 @@ const allowedOrigins = [
     "http://localhost:5174",
     "https://ai-resume-analyzer-builder-zeta.vercel.app",
     process.env.FRONTEND_URL
-].filter(Boolean)
+].filter(Boolean).map(url => url.replace(/\/$/, ""))
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(cors({
     origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (!origin) return callback(null, true)
+        const cleanOrigin = origin.replace(/\/$/, "")
+        if (
+            allowedOrigins.includes(cleanOrigin) ||
+            cleanOrigin.endsWith(".vercel.app")
+        ) {
             callback(null, true)
         } else {
+            console.error(`Blocked by CORS: ${origin}`)
             callback(new Error("Not allowed by CORS"))
         }
     },

@@ -20,7 +20,8 @@ const Register = () => {
                 navigate("/")
             }
         } catch (err) {
-            setError(err.response?.data?.message || "Registration failed. Please try again.")
+            console.error("Registration error:", err)
+            setError(err.response?.data?.message || err.message || "Registration failed. Please try again.")
         }
     }
 
